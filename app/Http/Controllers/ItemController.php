@@ -107,4 +107,19 @@ class ItemController extends Controller
         }
         return back();
   }
+  /**
+     * export a file in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function export(){
+        $items = Item::all();
+        Excel::create('items', function($excel) use($items) {
+            $excel->sheet('ExportFile', function($sheet) use($items) {
+                $sheet->fromArray($items);
+            });
+        })->export('xls');
+  
+      }
 }
