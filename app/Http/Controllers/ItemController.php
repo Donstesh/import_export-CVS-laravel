@@ -81,4 +81,30 @@ class ItemController extends Controller
     {
         //
     }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function import(Request $request)
+    {
+      if($request->file('imported-file'))
+      {
+                $path = $request->file('imported-file')->getRealPath();
+                $data = Excel::load($path, function($reader) {
+            })->get();
+
+            if(!empty($data) && $data->count())
+      {
+        $data = $data->toArray();
+        for($i=0;$i<count($data);$i++)
+        {
+          $dataImported[] = $data[$i];
+        }
+            }
+      Item::insert($dataImported);
+        }
+        return back();
+  }
 }
